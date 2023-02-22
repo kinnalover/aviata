@@ -17,13 +17,18 @@ python-dotenv
 #for email validation
 pydantic[email]
 
-
-
+#for data manipulation
+pandas
+lxml
+bs4
+feedparser
+#for scheduling 
+apscheduler
 
 #for testing
 pytest
 requests
-
+httpx
 
 
 #for accessing form data
