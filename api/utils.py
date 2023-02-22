@@ -7,7 +7,7 @@ import feedparser
 from db.session import SessionLocal, get_db
 from sqlalchemy.orm import Session
 from fastapi import Depends
-def get_currencies_from_nb_kz(fdate:str)->dict:
+def get_currencies_from_nb_kz(fdate:str, db)->dict:
     
     
     # Собираем URL для RSS-ленты
@@ -36,7 +36,7 @@ def get_currencies_from_nb_kz(fdate:str)->dict:
         # Сохраняем данные в формате JSON в файл
         
         data_json=json.dumps(data)
-        db = SessionLocal()
+
         
         res=add_daily_currency(currency=data_json, db=db)
         if not res:
@@ -59,12 +59,15 @@ def get_items_converted(currency: str, db: Session, process_info: List[Dict[str,
     if currency.lower() != "kzt":
         get_needed_currency = currency_values.get(currency)
         if not get_needed_currency:
-            return {"status": "Error: the currency you provided doesn't exist"}
+            return [{"status": "Error: the currency you provided doesn't exist"}]
 
     for flight in process_info:
         
         currency_of_flight = flight.get("pricing").get("currency")
         total_price_of_flight = flight.get("pricing").get("total")
+
+        if not currency_of_flight or not total_price_of_flight:
+            continue
 
         # Check if the currency of the flight exists in our currency rates dictionary
         price_of_currency=currency_values.get(currency_of_flight)
@@ -76,6 +79,7 @@ def get_items_converted(currency: str, db: Session, process_info: List[Dict[str,
                     "currency": currency_of_flight
                 }
             })
+            continue
 
         # Convert the currency to the requested currency
         if currency.lower() == "kzt":

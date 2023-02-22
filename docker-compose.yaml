@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+    ports:
+      - "9000:9000"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=aviata
+      - POSTGRES_HOST=db
+      - SQLALCHEMY_DATABASE_URI=postgresql://aviata_user:aviata_password@db/aviata
+      - POSTGRES_PORT=5432
+      - SECRET_KEY=supersecretkeyhere!!
+      - USE_SQLITE_DB=False
+      - SQLALCHEMY_SILENCE_UBER_WARNING=1
+      - POSTGRES_SERVER=db
+      - PORT
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=aviata

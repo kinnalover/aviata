@@ -27,6 +27,7 @@ class Settings:
     TIMEOUT_A=3
     TIMEOUT_B=6
     TEST_USER_EMAIL = "test@example.com"
+    PORT: str= os.getenv("PORT", "9000")
 
 
 settings = Settings()

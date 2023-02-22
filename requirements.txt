@@ -1,15 +1,9 @@
 fastapi
 uvicorn
 
-#for template
-jinja2
-
-#for static files
-aiofiles
-
 #for database
 sqlalchemy
-psycopg2
+psycopg2-binary
 
 #for loading environment variables
 python-dotenv
@@ -18,10 +12,11 @@ python-dotenv
 pydantic[email]
 
 #for data manipulation
-pandas
+xmltodict
 lxml
-bs4
+
 feedparser
+
 #for scheduling 
 apscheduler
 

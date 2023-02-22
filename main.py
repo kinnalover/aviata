@@ -1,8 +1,9 @@
 from api.base import api_router
 from api.utils import get_currencies_from_nb_kz
 from core.config import settings
+from core.scheduler import scheduler
 from db.base import Base
-from db.session import engine
+from db.session import engine, SessionLocal
 from db.utils import check_db_connected
 from db.utils import check_db_disconnected
 from fastapi import FastAPI
@@ -29,7 +30,8 @@ def start_application():
     configure_static(app)
     create_tables()
     fdate=datetime.now().date().strftime('%d.%m.%Y')
-    get_currencies_from_nb_kz(fdate=fdate)
+    get_currencies_from_nb_kz(fdate=fdate,db = SessionLocal())
+
     return app
 
 
@@ -39,8 +41,10 @@ app = start_application()
 @app.on_event("startup")
 async def app_startup():
     await check_db_connected()
+
     
 
 @app.on_event("shutdown")
 async def app_shutdown():
     await check_db_disconnected()
+    scheduler.shutdown()
